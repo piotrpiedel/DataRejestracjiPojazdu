@@ -17,7 +17,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jsoup:jsoup:1.16.2'
+//    implementation 'org.jsoup:jsoup:1.16.2'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.3.0'
+
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
