@@ -1,5 +1,6 @@
 package org.example;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -43,22 +44,27 @@ public class VehicleHistoryChecker {
 //    }
 
     public static void main(String[] args) {
-        // Set the path to the ChromeDriver executable
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\piopid\\Music\\DataRejestracjiPojazdu\\chromedriver\\win64-116.0.5793.0\\chromedriver-win64\\chromedriver.exe");
-
-        // Set up Chrome options to use a specific Chrome binary
-        ChromeOptions options = new ChromeOptions();
-        options.setBinary("C:\\Users\\piopid\\Music\\DataRejestracjiPojazdu\\chrome\\win64-116.0.5793.0\\chrome-win64\\chrome.exe");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--headless"); // Remove if you want to see the browser UI
-        options.addArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5793.0 Safari/537.36");
-
-        // Initialize the WebDriver with options
-        WebDriver driver = new ChromeDriver(options);
+        WebDriver driver = null;
 
         try {
-            // Navigate to the web page containing the form
+            // Setup ChromeDriver using WebDriverManager
+            System.out.println("Setting up ChromeDriver...");
+//            WebDriverManager.chromedriver().driverVersion("116.0.5793.0").browserVersion("116.0.5793.0").setup();
+            System.setProperty("webdriver.chrome.driver", "C:\\Users\\piopid\\Music\\DataRejestracjiPojazdu\\chromedriver\\win64-116.0.5793.0\\chromedriver-win64\\chromedriver.exe");
+
+            // ChromeOptions to specify the path to the Chrome binary
+            ChromeOptions options = new ChromeOptions();
+            String chromeBinaryPath = "C:\\Users\\piopid\\Music\\DataRejestracjiPojazdu\\chrome\\win64-116.0.5793.0\\chrome-win64\\chrome.exe";
+            options.setBinary(chromeBinaryPath);
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--headless"); // Comment out if you want to see the browser UI
+
+            // Initialize the WebDriver with options
+            System.out.println("Initializing ChromeDriver...");
+            driver = new ChromeDriver(options);
+            // Open the URL
+            System.out.println("Opening URL...");
             driver.get("https://historiapojazdu.gov.pl/");
 
             // Add a delay to mimic human behavior
@@ -108,7 +114,8 @@ public class VehicleHistoryChecker {
             e.printStackTrace();
         } finally {
             // Close the browser
-            driver.quit();
+            if (driver != null)
+                driver.quit();
         }
     }
 }
