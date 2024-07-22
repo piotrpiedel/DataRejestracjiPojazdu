@@ -44,78 +44,31 @@ public class VehicleHistoryChecker {
 //    }
 
     public static void main(String[] args) {
-        WebDriver driver = null;
 
+        WebDriver driver = null;
         try {
-            // Setup ChromeDriver using WebDriverManager
-            System.out.println("Setting up ChromeDriver...");
-//            WebDriverManager.chromedriver().driverVersion("116.0.5793.0").browserVersion("116.0.5793.0").setup();
+            // Set path to the ChromeDriver executable
             System.setProperty("webdriver.chrome.driver", "C:\\Users\\piopid\\Music\\DataRejestracjiPojazdu\\chromedriver\\win64-116.0.5793.0\\chromedriver-win64\\chromedriver.exe");
 
             // ChromeOptions to specify the path to the Chrome binary
             ChromeOptions options = new ChromeOptions();
             String chromeBinaryPath = "C:\\Users\\piopid\\Music\\DataRejestracjiPojazdu\\chrome\\win64-116.0.5793.0\\chrome-win64\\chrome.exe";
             options.setBinary(chromeBinaryPath);
-            options.addArguments("--no-sandbox");
-            options.addArguments("--disable-dev-shm-usage");
-            options.addArguments("--headless"); // Comment out if you want to see the browser UI
-
-            // Initialize the WebDriver with options
-            System.out.println("Initializing ChromeDriver...");
+            // Initialize ChromeDriver with options
             driver = new ChromeDriver(options);
+
             // Open the URL
-            System.out.println("Opening URL...");
-            driver.get("https://historiapojazdu.gov.pl/");
+            driver.get("https://www.google.com");
+            System.out.println("Page title is: " + driver.getTitle());
 
-            // Add a delay to mimic human behavior
-            Thread.sleep(2000);
-
-            // Define the vehicle registration and VIN
-            String vehicleRegistration = "WR510EM";
-            String vin = "KMHD35LE6DU138018";
-
-            // Find the vehicle registration input field and fill it
-            WebElement vehicleRegistrationField = driver.findElement(By.id("_historiapojazduportlet_WAR_historiapojazduportlet_:rej"));
-            vehicleRegistrationField.clear(); // Clear any existing text
-            vehicleRegistrationField.sendKeys(vehicleRegistration);
-
-            // Add a delay to mimic human behavior
-            Thread.sleep(2000);
-
-            // Find the VIN input field and fill it
-            WebElement vinField = driver.findElement(By.id("_historiapojazduportlet_WAR_historiapojazduportlet_:vin"));
-            vinField.clear(); // Clear any existing text
-            vinField.sendKeys(vin);
-
-            // Add a delay to mimic human behavior
-            Thread.sleep(2000);
-
-            // Find the date input field and fill it
-            WebElement dateField = driver.findElement(By.id("_historiapojazduportlet_WAR_historiapojazduportlet_:data"));
-            dateField.clear(); // Clear any existing text
-            dateField.sendKeys("01.01.2013");
-
-            // Add a delay to mimic human behavior
-            Thread.sleep(2000);
-
-            // Find the submit button and click it
-            WebElement submitButton = driver.findElement(By.id("btnSprawdz"));
-            submitButton.click();
-
-            // Wait for the response to load
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-            WebElement responseElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("responseElementId"))); // Adjust the locator as needed
-
-            // Get the response text
-            String responseText = responseElement.getText();
-            System.out.println("Response: " + responseText);
-
-        } catch (InterruptedException e) {
+            // Additional code to interact with the page...
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            // Close the browser
-            if (driver != null)
+            if (driver != null) {
                 driver.quit();
+            }
         }
+
     }
 }
