@@ -1,0 +1,54 @@
+https://4programmers.net/Forum/PHP/350649-historiapojazdugovpl_pobranie_raportu_poprzez_curl
+
+
+<?php
+  $url = "https://historiapojazdu.gov.pl/";
+  $vin = "";
+  $numer_rejestracyjny = "";
+  $data_pierwszej_rejestracji = '01.03.2012';
+
+  function curl($curl, $url) {
+    curl_setopt($curl, CURLOPT_URL, $url);
+
+    $content = curl_exec($curl);
+    $resultUrl = explode('<form id="_historiapojazduportlet_WAR_historiapojazduportlet_:formularz" name="_historiapojazduportlet_WAR_historiapojazduportlet_:formularz" method="post" action="', $content, 2);
+    $resultUrl = explode('"', $resultUrl[1], 2)[0];
+
+    $resultEncodedUrl = explode('<input type="hidden" name="javax.faces.encodedURL" value="', $content, 2);
+    $resultEncodedUrl = explode('"', $resultEncodedUrl[1], 2)[0];
+
+    $resultViewState = explode('<input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="', $content);
+    $resultViewState = explode('"', $resultViewState[1], 2)[0];
+    return array("postURL"=>$resultUrl, "javax.faces.encodedURL"=>$resultEncodedUrl, "javax.faces.ViewState"=>$resultViewState);
+  }
+
+  function sendPost($url, $numerRejestracyjny, $numerVIN, $dataPierwszejRejestracji) {
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);
+    curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0');
+    curl_setopt($curl, CURLOPT_COOKIEFILE, 'cookies');
+    curl_setopt($curl, CURLOPT_COOKIELIST, 'ALL');
+    $array = curl($curl, $url);
+
+    curl_setopt($curl, CURLOPT_URL, $array['postURL']);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_AUTOREFERER, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS,
+ urlencode('_historiapojazduportlet_WAR_historiapojazduportlet_:formularz').'='.urlencode('_historiapojazduportlet_WAR_historiapojazduportlet_:formularz').'&javax.faces.encodedURL='.urlencode(html_entity_decode($array['javax.faces.encodedURL'])).'&'.urlencode('_historiapojazduportlet_WAR_historiapojazduportlet_:rej').'='.urlencode($numerRejestracyjny).'&'.urlencode('_historiapojazduportlet_WAR_historiapojazduportlet_:vin').'='.urlencode($numerVIN).'&'.urlencode('_historiapojazduportlet_WAR_historiapojazduportlet_:data').'='.urlencode($dataPierwszejRejestracji).'&'.urlencode('_historiapojazduportlet_WAR_historiapojazduportlet_:btnSprawdz').'='.urlencode('Sprawdź pojazd »').'&javax.faces.ViewState='.urlencode($array['javax.faces.ViewState']));
+    $content = curl_exec($curl);
+    curl_close($curl);
+
+    return $content;
+  }
+
+  //zmienne do przesłania
+    //method="post"
+    //action=$postUrl
+    //enctype="application/x-www-form-urlencoded"
+
+  print sendPost($url, $numer_rejestracyjny, $vin, $data_pierwszej_rejestracji);
+?>
