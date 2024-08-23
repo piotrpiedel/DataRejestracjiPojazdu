@@ -20,9 +20,9 @@ public class VehicleHistoryChecker {
     private static final String URL = "https://historiapojazdu.gov.pl/";
 
     public static void main(String[] args) throws Exception {
-        String vin = "JM1BL1V87C1635221";
-        String plate = "KR032XV";
-        int yearOfProduction = 2011;
+        String vin = "W0LPE6EJ1A8063193";
+        String plate = "LBL52335";
+        int yearOfProduction = 2010;
 
         check(yearOfProduction, plate, vin);
     }
